@@ -44,7 +44,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public Long UserRegister(String userAccount, String userPassword, String checkPassword,String planetCode) {
         // 1. 校验参数非空
         if(StringUtils.isAnyBlank(userAccount,userPassword,checkPassword,planetCode)){
-            //TODO: 添加异常
             throw new BusinessException("参数为空");
         }
         // 2. 校验账户长度不小于4位

@@ -54,8 +54,8 @@ public class UserController {
         if(attribute == null) throw new BusinessException("未登录");
         //获取当前用户最新信息
         User byId = userService.getById(attribute.getId());
-        //TODO 校验用户是否合法
         User safeUser = userService.getSafeUser(byId);
+        if(safeUser.getPlanetCode()==null) throw new BusinessException("非法用户");
         return Result.success(safeUser);
     }
 
