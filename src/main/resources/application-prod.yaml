@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/louye?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 040810
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  session:
+    timeout: 86400 #session超时时间，默认30分钟
