@@ -1,8 +1,10 @@
 package com.luoye.usercenter.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoye.usercenter.common.ErrorCode;
 import com.luoye.usercenter.common.exception.BusinessException;
 import com.luoye.usercenter.contant.UserConstant;
 import com.luoye.usercenter.mapper.UserMapper;
@@ -15,8 +17,11 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
 * @author Lenovo
@@ -153,17 +158,74 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user1.setPhone(user.getPhone());
         user1.setEmail(user.getEmail());
         user1.setUserRole(user.getUserRole());
+        user1.setTags(user.getTags());
         user1.setUserStatus(user.getUserStatus());
         user1.setUpdateTime(user.getUpdateTime());
         user1.setPlanetCode(user.getPlanetCode());
         return user1;
     }
 
+    /**
+     * 用户注销
+     * @param request
+     * @return
+     */
     @Override
     public int userLogout(HttpServletRequest request) {
         //移除登录态
         request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
         return 1;
+    }
+
+    /**
+     * 根据标签搜索用户
+     *
+     * @param tagNameList
+     * @return
+     */
+
+    @Override
+    public List<User> searchuserByTag(List<String> tagNameList){
+        if(tagNameList ==null || tagNameList.size() == 0){
+            throw new BusinessException("参数为空");
+        }
+
+        //在数据库中查询
+
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        for (String tag : tagNameList) {
+
+            userQueryWrapper= userQueryWrapper.like("tags", tag);
+        }
+
+        List<User> list = this.list(userQueryWrapper);
+
+        List<User> collect = list.stream().map(user -> {
+            return getSafeUser(user);
+        }).collect(Collectors.toList());
+
+//        //在业务代码中搜索
+//        ArrayList<User> collect = new ArrayList<>();
+//        List<User> list = this.list(new QueryWrapper<User>());
+//        for (User user : list) {
+//            String tags = user.getTags();
+//            if (tags == null || tags.isEmpty()) {
+//                continue; // 跳过没有标签的用户
+//            }
+//            JSONArray objects = JSONUtil.parseArray(tags);
+//            if (objects == null) {
+//                continue; // 跳过解析失败的标签
+//            }
+//            for (Object object : objects) {
+//                if(tagNameList.contains(object)){
+//                    collect.add(user);
+//                    break;
+//                }
+//            }
+//        }
+
+
+        return collect;
     }
 }
 

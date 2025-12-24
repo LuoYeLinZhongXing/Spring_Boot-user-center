@@ -88,6 +88,19 @@ public class User implements Serializable {
      */
     private String planetCode;
 
+    private String tags;
+
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+
+
     // https://github.com/liyupi
 //
 //    @TableField(exist = false)

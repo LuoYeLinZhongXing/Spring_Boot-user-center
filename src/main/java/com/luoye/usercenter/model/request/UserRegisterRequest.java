@@ -21,6 +21,14 @@ public class UserRegisterRequest {
     //确认密码
     private String checkPassword;
 
+    public String getPlanetCode() {
+        return planetCode;
+    }
+
+    public void setPlanetCode(String planetCode) {
+        this.planetCode = planetCode;
+    }
+
     private String planetCode;
 
     public String getUserAccount() {
