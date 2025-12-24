@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 public class UserServiceTest {
 
@@ -39,5 +42,28 @@ public class UserServiceTest {
         String planetCode = "1";
         Long result = userService.UserRegister(userAccount, userPassword, checkPassword, planetCode);
         Assertions.assertTrue(result > 0);
+    }
+    @Test
+    void userLogin() {
+    }
+
+    @Test
+    void getSafeUser() {
+    }
+
+    @Test
+    void userLogout() {
+    }
+
+    @Test
+    void testearchuserByTag() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("java");
+        list.add("python");
+        List<User> users = userService.searchuserByTag(list);
+        for (User user : users) {
+            System.out.println(user.toString());
+        }
+        Assertions.assertNotNull(users);
     }
 }

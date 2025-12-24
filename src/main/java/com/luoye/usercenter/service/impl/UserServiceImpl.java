@@ -178,14 +178,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     /**
-     * 根据标签搜索用户
-     *
+     * 根据标签搜索用户(sql查询)
      * @param tagNameList
      * @return
      */
-
-    @Override
-    public List<User> searchuserByTag(List<String> tagNameList){
+    @Deprecated
+    private List<User> searchuserByTagBySql(List<String> tagNameList){
         if(tagNameList ==null || tagNameList.size() == 0){
             throw new BusinessException("参数为空");
         }
@@ -223,6 +221,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 //                }
 //            }
 //        }
+
+
+        return collect;
+    }
+
+    /**
+     * 根据标签搜索用户(内存过滤)
+     * @param tagNameList
+     * @return
+     */
+    @Override
+    public List<User> searchuserByTag(List<String> tagNameList){
+        if(tagNameList ==null || tagNameList.size() == 0){
+            throw new BusinessException("参数为空");
+        }
+
+        //在业务代码中搜索
+        ArrayList<User> collect = new ArrayList<>();
+        List<User> list = this.list(new QueryWrapper<User>());
+        for (User user : list) {
+            String tags = user.getTags();
+            if (tags == null || tags.isEmpty()) {
+                continue; // 跳过没有标签的用户
+            }
+            JSONArray objects = JSONUtil.parseArray(tags);
+            if (objects == null) {
+                continue; // 跳过解析失败的标签
+            }
+            for (Object object : objects) {
+                if(tagNameList.contains(object)){
+                    collect.add(user);
+                    break;
+                }
+            }
+        }
 
 
         return collect;
