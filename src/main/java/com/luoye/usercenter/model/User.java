@@ -32,6 +32,13 @@ public class User implements Serializable {
      */
     private String userAccount;
 
+
+
+    /**
+     * 个人简介
+     */
+    private String userProfile;
+
     /**
      * 用户头像
      */
@@ -130,6 +137,13 @@ public class User implements Serializable {
         this.userAccount = userAccount;
     }
 
+    public String getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(String userProfile) {
+        this.userProfile = userProfile;
+    }
     public String getAvatarUrl() {
         return avatarUrl;
     }

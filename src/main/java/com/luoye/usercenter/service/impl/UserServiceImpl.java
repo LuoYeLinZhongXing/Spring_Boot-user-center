@@ -153,6 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user1.setId(user.getId());
         user1.setUsername(user.getUsername());
         user1.setUserAccount(user.getUserAccount());
+        user1.setUserProfile(user.getUserProfile());
         user1.setAvatarUrl(user.getAvatarUrl());
         user1.setGender(user.getGender());
         user1.setPhone(user.getPhone());
@@ -251,6 +252,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             }
             for (Object object : objects) {
                 if(tagNameList.contains(object)){
+                    user = getSafeUser(user);
                     collect.add(user);
                     break;
                 }

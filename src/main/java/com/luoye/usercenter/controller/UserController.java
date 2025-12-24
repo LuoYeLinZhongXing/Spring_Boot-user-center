@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:3000"},maxAge = 3600)
 public class UserController {
     @Autowired
     private UserService userService;
@@ -73,6 +74,13 @@ public class UserController {
         return Result.success(username1);
     }
 
+    @GetMapping("/search/tags")
+    public Result<List<User>> searchUsersByTags(@RequestParam(required = false) List<String> tagNameList){
+        //log.info("开始查询用户");
+        if (tagNameList == null) throw new BusinessException("参数错误");
+        List<User> list = userService.searchuserByTag(tagNameList);
+        return Result.success(list);
+    }
     @DeleteMapping("/delete")
     public Result<Boolean> deleteUser(Long id,HttpServletRequest request){
         if (isAdmin(request)) throw new BusinessException("无权限");
