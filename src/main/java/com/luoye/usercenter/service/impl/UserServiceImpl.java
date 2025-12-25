@@ -1,6 +1,5 @@
 package com.luoye.usercenter.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,6 +11,7 @@ import com.luoye.usercenter.model.User;
 import com.luoye.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -36,6 +36,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private final String SALT = "luoye";
 
 
+
+    @Autowired
+    private UserMapper userMapper;
 
 
     /**
@@ -261,6 +264,59 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
         return collect;
+    }
+
+    @Override
+    public int Updateuser(User user,User loginUser) {
+
+        Long userid = user.getId();
+        if(userid == null) throw new BusinessException("用户id为空");
+        // 检查用户是否存在
+        User oldUser = userMapper.selectById(userid);
+        if (oldUser == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        // 管理员可以更新任何用户
+        if (isAdmin(loginUser)) {
+            int result = userMapper.updateById(user);
+            if (result <= 0) {
+                throw new BusinessException("更新失败");
+            }
+            return result;
+        }
+
+        // 普通用户只能更新自己的信息
+        if (!userid.equals(loginUser.getId())) {
+            throw new BusinessException("无权限");
+        }
+
+        int result = userMapper.updateById(user);
+        if (result <= 0) {
+            throw new BusinessException("更新失败");
+        }
+        return result;
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request){
+        if(request == null) throw new BusinessException("请求为空");
+        User loginUser = (User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        if(loginUser == null) throw new BusinessException("未登录");
+        return loginUser;
+    }
+
+    @Override
+    public boolean isAdmin(HttpServletRequest request) {
+        //仅管理员可进行添加或删除
+        User user =(User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        return user == null || user.getUserRole() != UserConstant.ADMIN_ROLE;
+    }
+
+    @Override
+    public boolean isAdmin(User loginUser) {
+        //仅管理员可进行添加或删除
+        return loginUser == null || loginUser.getUserRole() != UserConstant.ADMIN_ROLE;
     }
 }
 

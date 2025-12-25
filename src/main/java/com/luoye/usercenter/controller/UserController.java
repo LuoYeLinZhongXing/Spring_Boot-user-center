@@ -63,7 +63,7 @@ public class UserController {
     @GetMapping("/search")
     public Result<List<User>> searchUsers(String username,HttpServletRequest request){
         //仅管理员可进行添加或删除
-        if (isAdmin(request)) throw new BusinessException("无权限");
+        if (userService.isAdmin(request)) throw new BusinessException("无权限");
         //log.info("开始查询用户");
         if (StringUtils.isAnyBlank(username)) throw new BusinessException("参数错误");
 
@@ -72,6 +72,14 @@ public class UserController {
                 }
         ).collect(Collectors.toList());
         return Result.success(username1);
+    }
+
+    @PostMapping("/update")
+    public Result<Integer> updateUser(@RequestBody User user,HttpServletRequest request){
+        if(user == null){throw new BusinessException("参数为空");}
+        User loginUser = userService.getLoginUser(request);
+        Integer update = userService.Updateuser(user,loginUser);
+        return Result.success(update);
     }
 
     @GetMapping("/search/tags")
@@ -83,7 +91,7 @@ public class UserController {
     }
     @DeleteMapping("/delete")
     public Result<Boolean> deleteUser(Long id,HttpServletRequest request){
-        if (isAdmin(request)) throw new BusinessException("无权限");
+        if (userService.isAdmin(request)) throw new BusinessException("无权限");
         if (id == null) throw new BusinessException("参数错误");
         boolean b = userService.removeById(id);
         return Result.success(b);
@@ -99,9 +107,5 @@ public class UserController {
         return Result.success(i);
 
     }
-    private static boolean isAdmin(HttpServletRequest request) {
-        //仅管理员可进行添加或删除
-        User user =(User) request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
-        return user == null || user.getUserRole() != UserConstant.ADMIN_ROLE;
-    }
+
 }
