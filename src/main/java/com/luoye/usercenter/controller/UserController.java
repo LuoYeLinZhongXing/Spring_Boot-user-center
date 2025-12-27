@@ -2,6 +2,7 @@ package com.luoye.usercenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.luoye.usercenter.common.Result;
 import com.luoye.usercenter.common.exception.BusinessException;
 import com.luoye.usercenter.contant.UserConstant;
@@ -12,10 +13,13 @@ import com.luoye.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,6 +30,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/register")
     public Result<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest){
@@ -74,8 +80,42 @@ public class UserController {
         return Result.success(username1);
     }
 
+    // todo 推荐多个，未实现
+    @GetMapping("/recommend")
+    public Result<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request) {
+        if(pageSize <= 0){pageSize = 10;}
+        if(pageNum <= 0){pageNum = 1;}
+
+        String key = String.format("user:recommend:%s", userService.getLoginUser(request).getId());
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Page<User> page =(Page<User>)valueOperations.get(key);
+        if(page != null) return Result.success(page);
+
+        page = userService.page(new Page<>((pageNum - 1)*pageSize, pageSize), new QueryWrapper<>());
+        try {
+            valueOperations.set(key, page,60, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("redis set key error", e);
+        }
+        return Result.success(page);
+    }
+
     @PostMapping("/update")
     public Result<Integer> updateUser(@RequestBody User user,HttpServletRequest request){
+
+        // 判断前端传来的数据中除了id字段是否还包含其他字段
+        if (user.getId() == null) {
+            throw new BusinessException("id不能为空");
+        }
+        // 检查user对象是否只有id字段有值，其他字段都为null
+        if (StringUtils.isBlank(user.getUsername()) && StringUtils.isBlank(user.getUserAccount())
+                && StringUtils.isBlank(user.getUserProfile()) && StringUtils.isBlank(user.getAvatarUrl())
+                && StringUtils.isBlank(user.getPhone()) && StringUtils.isBlank(user.getEmail())
+                && StringUtils.isBlank(user.getPlanetCode()) && StringUtils.isBlank(user.getTags())
+                && user.getGender() == null && user.getUserStatus() == null
+                && user.getUserRole() == null && user.getIsDelete() == null) {
+            throw new BusinessException("不能只更新id字段");
+        }
         if(user == null){throw new BusinessException("参数为空");}
         User loginUser = userService.getLoginUser(request);
         Integer update = userService.Updateuser(user,loginUser);
