@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.luoye.usercenter.common.Result;
 import com.luoye.usercenter.common.exception.BusinessException;
 import com.luoye.usercenter.contant.UserConstant;
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 import com.luoye.usercenter.model.request.UserLoginRequest;
 import com.luoye.usercenter.model.request.UserRegisterRequest;
 import com.luoye.usercenter.service.UserService;
@@ -80,7 +80,6 @@ public class UserController {
         return Result.success(username1);
     }
 
-    // todo 推荐多个，未实现
     @GetMapping("/recommend")
     public Result<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request) {
         if(pageSize <= 0){pageSize = 10;}

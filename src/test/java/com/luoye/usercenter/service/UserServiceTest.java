@@ -1,6 +1,6 @@
 package com.luoye.usercenter.service;
 
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

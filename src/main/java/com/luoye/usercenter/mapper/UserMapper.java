@@ -1,7 +1,7 @@
 package com.luoye.usercenter.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 
 /**
 * @author Lenovo

@@ -2,9 +2,7 @@ package com.luoye.usercenter.job;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.luoye.usercenter.common.exception.BusinessException;
-import com.luoye.usercenter.mapper.UserMapper;
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 import com.luoye.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;

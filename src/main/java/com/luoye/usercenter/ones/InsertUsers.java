@@ -1,10 +1,6 @@
 package com.luoye.usercenter.ones;
 
 
-import com.luoye.usercenter.mapper.UserMapper;
-import com.luoye.usercenter.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component

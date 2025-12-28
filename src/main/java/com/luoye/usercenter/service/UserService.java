@@ -1,7 +1,7 @@
 package com.luoye.usercenter.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

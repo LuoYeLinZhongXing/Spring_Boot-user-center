@@ -22,3 +22,35 @@ create table user
 )
     comment '用户表';
 
+-- auto-generated definition
+create table team
+(
+    id          tinyint auto_increment comment '主键'
+        primary key,
+    name        varchar(256)                       not null comment '队伍名称',
+    description varchar(512)                       null comment '队伍描述',
+    max_num     int      default 1                 not null comment '最大人数',
+    expire_time datetime                           null comment '过期时间',
+    user_id     bigint                             not null comment '创建人id',
+    status      int      default 0                 not null comment '队伍状态: 0公开，1私有，2加密',
+    password    varchar(256)                       null comment '密码',
+    creat_time  datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_delete   int      default 0                 not null comment '是否删除'
+)
+    comment '队伍表';
+
+-- auto-generated definition
+create table user_team
+(
+    id          bigint auto_increment comment '主键'
+        primary key,
+    user_id     bigint                             not null comment '用户id',
+    team_id     bigint                             not null comment '队伍id',
+    join_time   datetime                           null comment '加入时间',
+    create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_delete   tinyint  default 0                 not null comment '是否删除'
+)
+    comment '用户队伍关联表';
+

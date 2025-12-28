@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoye.usercenter.common.exception.BusinessException;
 import com.luoye.usercenter.contant.UserConstant;
 import com.luoye.usercenter.mapper.UserMapper;
-import com.luoye.usercenter.model.User;
+import com.luoye.usercenter.model.domain.User;
 import com.luoye.usercenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
