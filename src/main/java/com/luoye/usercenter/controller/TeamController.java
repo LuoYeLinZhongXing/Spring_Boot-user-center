@@ -7,6 +7,7 @@ import com.luoye.usercenter.model.domain.Team;
 import com.luoye.usercenter.model.domain.User;
 import com.luoye.usercenter.model.dto.TeamQuery;
 import com.luoye.usercenter.model.request.AddTeamRequest;
+import com.luoye.usercenter.model.request.TeamJoinRequest;
 import com.luoye.usercenter.model.request.TeamUpdateRequest;
 import com.luoye.usercenter.model.vo.TeamUserVo;
 import com.luoye.usercenter.service.TeamService;
@@ -77,4 +78,10 @@ public class TeamController {
     }
 
 
+    @PostMapping("/join")
+    public Result<Boolean> joinTeam(@RequestBody TeamJoinRequest teamJoinRequest, HttpServletRequest request){
+        if(teamJoinRequest==null) throw new BusinessException("参数为空");
+        User loginUser = userService.getLoginUser(request);
+        return teamService.joinTeam(teamJoinRequest,loginUser);
+    }
 }
