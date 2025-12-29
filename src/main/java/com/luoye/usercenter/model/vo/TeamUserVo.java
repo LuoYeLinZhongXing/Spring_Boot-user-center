@@ -1,27 +1,19 @@
-package com.luoye.usercenter.model.dto;
+package com.luoye.usercenter.model.vo;
+
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.luoye.usercenter.model.request.PageRequest;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
-/**
- * 队伍查询封装类
- */
 @Data
-public class TeamQuery extends PageRequest {
+public class TeamUserVo {
     /**
      * id
      */
     private Long id;
-
-    /**
-     * 搜索关键词
-     */
-    private String searchText;
     /**
      * 队伍名称
      */
@@ -37,6 +29,10 @@ public class TeamQuery extends PageRequest {
      */
     private Integer maxNum;
 
+    /**
+     * 过期时间
+     */
+    private Date expireTime;
 
     /**
      * 用户id
@@ -48,6 +44,13 @@ public class TeamQuery extends PageRequest {
      */
     private Integer status;
 
+    /**
+     * 密码
+     */
+    private String password;
 
-
+    /**
+     * 创建人
+     */
+    private UserVo user;
 }
