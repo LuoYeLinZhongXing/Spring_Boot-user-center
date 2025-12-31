@@ -3,6 +3,7 @@ package com.luoye.usercenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.luoye.usercenter.common.ErrorCode;
 import com.luoye.usercenter.common.Result;
 import com.luoye.usercenter.common.exception.BusinessException;
 import com.luoye.usercenter.contant.UserConstant;
@@ -80,6 +81,13 @@ public class UserController {
         return Result.success(username1);
     }
 
+    /**
+     * 推荐用户
+     * @param pageSize
+     * @param pageNum
+     * @param request
+     * @return
+     */
     @GetMapping("/recommend")
     public Result<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request) {
         if(pageSize <= 0){pageSize = 10;}
@@ -145,6 +153,22 @@ public class UserController {
         int i = userService.userLogout(HttpServletRequest);
         return Result.success(i);
 
+    }
+
+    /**
+     * 获取最匹配的用户
+     *
+     * @param num
+     * @param request
+     * @return
+     */
+    @GetMapping("/match")
+    public Result<List<User>> matchUsers(long num, HttpServletRequest request) {
+        if (num <= 0 || num > 20) {
+            throw new BusinessException("参数非法");
+        }
+        User user = userService.getLoginUser(request);
+        return Result.success(userService.matchUsers(num, user));
     }
 
 }

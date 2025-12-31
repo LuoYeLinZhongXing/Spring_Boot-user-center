@@ -40,6 +40,14 @@ public interface UserService extends IService<User> {
     List<User> searchuserByTag(List<String> tagNameList);
 
     /**
+     * 获取最匹配的用户
+     * @param num
+     * @param loginUser
+     * @return
+     */
+    List<User> matchUsers(long num, User loginUser);
+
+    /**
      * 更新用户
      * @param user
      * @param loginUser

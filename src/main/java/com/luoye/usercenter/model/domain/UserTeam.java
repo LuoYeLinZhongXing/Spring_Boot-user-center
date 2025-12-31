@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户队伍关系实体
