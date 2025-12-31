@@ -7,6 +7,7 @@ import com.luoye.usercenter.model.request.PageRequest;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 队伍查询封装类
@@ -17,6 +18,10 @@ public class TeamQuery extends PageRequest {
      * id
      */
     private Long id;
+    /**
+     * id列表
+     */
+    private List<Long> ids;
 
     /**
      * 搜索关键词
